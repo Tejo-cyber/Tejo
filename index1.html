@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Blog Generator</title>
+</head>
+<body>
+    <h1>Food Blog Generator</h1>
+    <textarea id="prompt" placeholder="Enter your blog topic here..." rows="4" cols="50"></textarea>
+    <br><br>
+    <button onclick="generateBlog()">Generate Blog</button>
+    <h2>Generated Blog:</h2>
+    <p id="output"></p>
+
+    <script>
+        async function generateBlog() {
+            const prompt = document.getElementById('prompt').value;
+
+            const response = await fetch('http://127.0.0.1:5000/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: prompt }),
+            });
+
+            const data = await response.json();
+            if (data.blog) {
+                document.getElementById('output').innerText = data.blog;
+            } else {
+                document.getElementById('output').innerText = "Error: " + data.error;
+            }
+        }
+    </script>
+</body>
+</html>

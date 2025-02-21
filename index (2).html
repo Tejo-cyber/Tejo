@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flavour Fusion: Recipe Blog Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Flavour Fusion: Recipe Blog Generator</h1>
+    <form id="recipeForm">
+      <label for="topic">Enter Recipe Topic:</label>
+      <input type="text" id="topic" name="topic" required />
+
+      <label for="wordCount">Word Count:</label>
+      <input type="number" id="wordCount" name="wordCount" min="100" required />
+
+      <button type="submit">Generate Blog</button>
+    </form>
+
+    <div id="output" class="output">
+      <h2>Generated Blog:</h2>
+      <p id="blogContent"></p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("recipeForm");
+    const output = document.getElementById("blogContent");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const topic = document.getElementById("topic").value;
+      const wordCount = document.getElementById("wordCount").value;
+
+      try {
+        const response = await fetch("http://localhost:5000/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic, wordCount }),
+        });
+
+        const data = await response.json();
+        if (data.blog) {
+          output.textContent = data.blog;
+        } else {
+          output.textContent = "Error generating blog.";
+        }
+      } catch (error) {
+        output.textContent = "Error connecting to the server.";
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
